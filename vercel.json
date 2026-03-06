@@ -1,0 +1,9 @@
+{
+  "routes": [
+    { "src": "/login", "dest": "/html/login.html" },
+    { "src": "/signup", "dest": "/html/signup.html" },
+    { "src": "/dashboard", "dest": "/html/dashboard.html" },
+    { "src": "/studio", "dest": "/html/studio.html" },
+    { "src": "/tool", "dest": "/html/tool_studio.html" }
+  ]
+}

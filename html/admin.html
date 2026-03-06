@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>Admin Panel — HackReality</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+padding:40px;
+}
+
+h1{
+margin-bottom:30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#1c1c1c;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #333;
+text-align:left;
+}
+
+button{
+padding:8px 14px;
+border:none;
+background:#7a5cff;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+.status{
+font-size:13px;
+opacity:0.7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>HackReality Admin Panel</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>Email</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="usersTable"></tbody>
+
+</table>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+doc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyA6BZsjkGC97WQ6VhsDo4I1sGMXjTD1ecc",
+authDomain:"hack-reality.firebaseapp.com",
+projectId:"hack-reality",
+storageBucket:"hack-reality.firebasestorage.app",
+messagingSenderId:"101142651006",
+appId:"1:101142651006:web:77b34b4a69bc88fdcdb82f"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+async function loadUsers(){
+
+const querySnapshot = await getDocs(collection(db,"members"));
+
+const table = document.getElementById("usersTable");
+
+table.innerHTML="";
+
+querySnapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+const uid = docSnap.id;
+
+const row = document.createElement("tr");
+
+row.innerHTML = `
+<td>${data.email}</td>
+<td class="status">${data.approved ? "Approved" : "Pending"}</td>
+<td>
+${data.approved ? "" : `<button onclick="approveUser('${uid}')">Approve</button>`}
+</td>
+`;
+
+table.appendChild(row);
+
+});
+
+}
+
+window.approveUser = async function(uid){
+
+await updateDoc(doc(db,"members",uid),{
+approved:true
+});
+
+alert("User approved");
+
+loadUsers();
+
+}
+
+loadUsers();
+
+</script>
+
+</body>
+</html>

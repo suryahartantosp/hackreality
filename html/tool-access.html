@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>HackReality AI Studio</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+margin:0;
+background:#07081c;
+font-family:Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:white;
+}
+
+.box{
+background:#0f1135;
+padding:40px;
+border-radius:14px;
+width:320px;
+text-align:center;
+box-shadow:0 0 40px rgba(0,0,0,0.4);
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+border-radius:6px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+background:linear-gradient(90deg,#7b3fe4,#b33df5);
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>HACKREALITY AI STUDIO</h2>
+
+<p>Access Email</p>
+
+<input id="email" placeholder="Masukkan email terdaftar">
+
+<button onclick="enterStudio()">AKTIVASI STUDIO</button>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import { getFirestore, collection, query, where, getDocs }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyA6BZsjkGC97WQ6VhsDo4I1sGMXjTD1ecc",
+authDomain:"hack-reality.firebaseapp.com",
+projectId:"hack-reality"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+window.enterStudio = async function(){
+
+const email=document.getElementById("email").value;
+
+const q=query(
+collection(db,"members"),
+where("email","==",email),
+where("approved","==",true)
+);
+
+const querySnapshot=await getDocs(q);
+
+if(querySnapshot.empty){
+
+alert("Email belum approved atau tidak terdaftar");
+return;
+
+}
+
+window.location.href="https://gemini.google.com/share/9fd1f964efb2";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<script type="module" src="auth-check.js"></script>
+
+<script>
+
+const token = sessionStorage.getItem("tool_access");
+
+if(!token){
+window.location.replace("dashboard.html");
+}
+
+const params = new URLSearchParams(window.location.search);
+const tool = params.get("tool");
+
+const tools = {
+
+product:"https://gemini.google.com/share/ac2f400c7492",
+character:"https://gemini.google.com/share/9fd1f964efb2",
+ads:"LINK_GEMINI_ADS",
+story:"LINK_GEMINI_STORY",
+prompt:"LINK_GEMINI_PROMPT"
+
+};
+
+if(!tools[tool]){
+window.location.replace("dashboard.html");
+}
+
+window.location.href = tools[tool];
+
+</script>

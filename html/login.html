@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>HackReality Member Login</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+background:#F5F1EA;
+font-family:'Inter',sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+width:340px;
+background:white;
+padding:40px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+background:#1C1C1C;
+color:white;
+cursor:pointer;
+border-radius:6px;
+}
+
+.switch{
+margin-top:12px;
+font-size:13px;
+color:#666;
+cursor:pointer;
+}
+
+.switch:hover{
+text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2 id="title">Member Login</h2>
+
+<input id="email" placeholder="Email">
+
+<input id="password" type="password" placeholder="Password">
+
+<button id="mainButton" onclick="login()">Login</button>
+
+<div class="switch" onclick="forgotPassword()">
+Forgot password
+</div>
+
+<div class="switch" onclick="showSignup()">
+Create account
+</div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import { 
+getAuth,
+signInWithEmailAndPassword,
+createUserWithEmailAndPassword,
+sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import { 
+getFirestore,
+doc,
+setDoc
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyA6BZsjkGC97WQ6VhsDo4I1sGMXjTD1ecc",
+authDomain:"hack-reality.firebaseapp.com",
+projectId:"hack-reality",
+storageBucket:"hack-reality.firebasestorage.app",
+messagingSenderId:"101142651006",
+appId:"1:101142651006:web:77b34b4a69bc88fdcdb82f"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+window.login = function(){
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+signInWithEmailAndPassword(auth,email,password)
+
+.then(()=>{
+
+window.location.href="dashboard.html";
+
+})
+
+.catch((error)=>{
+
+alert(error.message);
+
+});
+
+}
+
+
+window.showSignup = function(){
+
+document.getElementById("title").innerText="Create Account";
+
+document.getElementById("mainButton").innerText="Register";
+
+document.getElementById("mainButton").onclick=register;
+
+}
+
+
+window.register = function(){
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+createUserWithEmailAndPassword(auth,email,password)
+
+.then(async (cred)=>{
+
+await setDoc(doc(db,"members",cred.user.uid),{
+
+email:email,
+approved:false,
+created:new Date()
+
+});
+
+window.location.href="pending.html";
+
+})
+
+.catch((error)=>{
+
+alert(error.message);
+
+});
+
+}
+
+
+window.forgotPassword = function(){
+
+const email = document.getElementById("email").value;
+
+if(!email){
+
+alert("Enter your email first");
+
+return;
+
+}
+
+sendPasswordResetEmail(auth,email)
+
+.then(()=>{
+
+alert("Password reset email sent");
+
+})
+
+.catch((error)=>{
+
+alert(error.message);
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>
